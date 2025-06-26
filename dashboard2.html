@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Premium Stock Calculators | Pro Trading Tools</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #4361ee;
+      --primary-light: #3a86ff;
+      --secondary-color: #7209b7;
+      --success-color: #06d6a0;
+      --danger-color: #ef476f;
+      --warning-color: #ffd166;
+      --dark-color: #1a1a2e;
+      --darker-color: #16213e;
+      --light-color: #f8f9fa;
+      --gray-color: #e2e8f0;
+      --border-radius: 12px;
+      --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      --box-shadow-hover: 0 15px 35px rgba(0, 0, 0, 0.12);
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      --glass-bg: rgba(255, 255, 255, 0.08);
+      --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+      --text-primary: #2b2d42;
+      --text-secondary: #4a5568;
+    }
+
+    [data-theme="dark"] {
+      --primary-color: #4895ef;
+      --primary-light: #4cc9f0;
+      --secondary-color: #b5179e;
+      --dark-color: #121212;
+      --darker-color: #0d0d0d;
+      --light-color: #1e1e1e;
+      --gray-color: #2d3748;
+      --text-primary: #f8f9fa;
+      --text-secondary: #e2e8f0;
+      --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      --box-shadow-hover: 0 15px 35px rgba(0, 0, 0, 0.25);
+      --glass-bg: rgba(0, 0, 0, 0.2);
+      --glass-border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      line-height: 1.6;
+      background: var(--light-color);
+      color: var(--text-primary);
+      min-height: 100vh;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    /* Header with glass morphism effect */
+    header {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+      color: white;
+      padding: 1.5rem 0;
+      text-align: center;
+      box-shadow: var(--box-shadow);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: var(--glass-border);
+    }
+
+    header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 L0,100 Z" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2"/></svg>');
+      opacity: 0.5;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      font-weight: 700;
+      position: relative;
+      letter-spacing: -0.5px;
+    }
+
+    h1 i {
+      margin-right: 12px;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      margin-top: 0.5rem;
+      font-weight: 300;
+      letter-spacing: 0.5px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    /* Theme toggle button */
+    .theme-toggle {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--box-shadow);
+      z-index: 100;
+      transition: var(--transition);
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.1);
+      box-shadow: var(--box-shadow-hover);
+    }
+
+    /* Premium badge */
+    .premium-badge {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background: linear-gradient(45deg, var(--warning-color), var(--danger-color));
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 15px rgba(239, 71, 111, 0.3);
+      z-index: 1;
+    }
+
+    /* Calculator grid with masonry effect */
+    .calculator-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    /* Enhanced calculator card with glass effect */
+    .calculator-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 1.75rem;
+      transition: var(--transition);
+      border: var(--glass-border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .calculator-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    }
+
+    .calculator-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--box-shadow-hover);
+    }
+
+    .calculator-card h3 {
+      color: var(--primary-color);
+      margin-bottom: 1.5rem;
+      font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+      font-weight: 600;
+    }
+
+    .calculator-card h3 i {
+      margin-right: 12px;
+      font-size: 1.2rem;
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(67, 97, 238, 0.1);
+      border-radius: 8px;
+      padding: 0.5rem;
+    }
+
+    /* Improved input groups */
+    .input-group {
+      margin-bottom: 1.25rem;
+      position: relative;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      font-size: 0.95rem;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 0.9rem 1.25rem;
+      border: 1px solid var(--gray-color);
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      transition: var(--transition);
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-primary);
+    }
+
+    .input-group input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .input-group .input-icon {
+      position: absolute;
+      right: 15px;
+      top: 42px;
+      color: var(--text-secondary);
+      opacity: 0.7;
+    }
+
+    /* Enhanced button with loading state */
+    button {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      background-size: 200% auto;
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-top: 0.5rem;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: -1;
+    }
+
+    button:hover {
+      background-position: right center;
+      transform: translateY(-2px);
+      box-shadow: 0 7px 20px rgba(67, 97, 238, 0.3);
+    }
+
+    button:hover::before {
+      opacity: 1;
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button.loading::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    /* Enhanced result display */
+    .result {
+      margin-top: 1.75rem;
+      padding: 1.5rem;
+      border-radius: var(--border-radius);
+      background: var(--glass-bg);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      border: var(--glass-border);
+      display: none;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    .result-title {
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: var(--text-primary);
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .result-title i {
+      margin-right: 8px;
+    }
+
+    .result-value {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin: 0.5rem 0;
+    }
+
+    .profit {
+      color: var(--success-color);
+    }
+
+    .loss {
+      color: var(--danger-color);
+    }
+
+    .neutral {
+      color: var(--text-primary);
+    }
+
+    .result-details {
+      margin-top: 1rem;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      white-space: pre-line;
+    }
+
+    /* Premium tabs */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .tab {
+      padding: 0.9rem 2rem;
+      background: var(--glass-bg);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+      box-shadow: var(--box-shadow);
+      transition: var(--transition);
+      border: var(--glass-border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tab::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to right, rgba(67, 97, 238, 0.1), rgba(114, 9, 183, 0.1));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .tab:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--box-shadow-hover);
+    }
+
+    .tab:hover::before {
+      opacity: 1;
+    }
+
+    .tab.active {
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      color: white;
+      box-shadow: 0 10px 25px rgba(67, 97, 238, 0.3);
+    }
+
+    .calculator-section {
+      display: none;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    .calculator-section.active {
+      display: block;
+    }
+
+    /* Enhanced tooltip */
+    .info-tooltip {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 8px;
+      cursor: pointer;
+      width: 18px;
+      height: 18px;
+      background: var(--gray-color);
+      border-radius: 50%;
+      color: var(--dark-color);
+      font-size: 0.7rem;
+      font-weight: bold;
+      transition: var(--transition);
+    }
+
+    .info-tooltip:hover {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .info-tooltip .tooltip-text {
+      visibility: hidden;
+      width: 250px;
+      background-color: var(--darker-color);
+      color: white;
+      text-align: left;
+      border-radius: var(--border-radius);
+      padding: 12px;
+      position: absolute;
+      z-index: 10;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: 0.85rem;
+      font-weight: normal;
+      line-height: 1.5;
+      box-shadow: var(--box-shadow);
+    }
+
+    .info-tooltip .tooltip-text::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: var(--darker-color) transparent transparent transparent;
+    }
+
+    .info-tooltip:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    /* Responsive design */
+    @media (max-width: 992px) {
+      .calculator-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      }
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .subtitle {
+        font-size: 1rem;
+      }
+      
+      .tab {
+        padding: 0.8rem 1.5rem;
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .container {
+        padding: 0 1rem;
+      }
+      
+      .calculator-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .tabs {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .tab {
+        width: 100%;
+        max-width: 280px;
+        text-align: center;
+      }
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+
+    .calculator-card {
+      animation: fadeIn 0.6s ease-out forwards;
+      opacity: 0;
+    }
+
+    .calculator-card:nth-child(1) { animation-delay: 0.1s; }
+    .calculator-card:nth-child(2) { animation-delay: 0.2s; }
+    .calculator-card:nth-child(3) { animation-delay: 0.3s; }
+    .calculator-card:nth-child(4) { animation-delay: 0.4s; }
+    .calculator-card:nth-child(5) { animation-delay: 0.5s; }
+    .calculator-card:nth-child(6) { animation-delay: 0.6s; }
+
+    /* Chart container for visualization */
+    .chart-container {
+      width: 100%;
+      height: 200px;
+      margin-top: 1.5rem;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      background: var(--glass-bg);
+      position: relative;
+    }
+
+    /* Floating action button for quick actions */
+    .fab {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(67, 97, 238, 0.3);
+      cursor: pointer;
+      z-index: 90;
+      transition: var(--transition);
+      border: none;
+    }
+
+    .fab:hover {
+      transform: translateY(-3px) scale(1.1);
+      box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
+    }
+
+    /* Toast notifications */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--darker-color);
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+
+    .toast i {
+      margin-right: 0.75rem;
+      font-size: 1.2rem;
+    }
+
+    .toast.success i {
+      color: var(--success-color);
+    }
+
+    .toast.error i {
+      color: var(--danger-color);
+    }
+
+    /* Premium features indicator */
+    .premium-feature {
+      position: relative;
+    }
+
+    .premium-feature::after {
+      content: 'PRO';
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: linear-gradient(45deg, var(--warning-color), var(--danger-color));
+      color: white;
+      font-size: 0.65rem;
+      font-weight: bold;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      line-height: 1;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Header with premium styling -->
+  <header>
+    <div class="container">
+      <h1><i class="fas fa-chart-line"></i>Stock Calculators</h1>
+      <p class="subtitle">Professional-grade tools for serious investors</p>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Premium tabs navigation -->
+    <div class="tabs">
+  <div class="tab active" onclick="showSection('basic-calculators')" style="background-color: red;">
+        <i class="fas fa-calculator"></i> Essentials
+      </div>
+      <div class="tab" onclick="showSection('advanced-calculators')">
+        <i class="fas fa-chart-bar"></i> Advanced
+      </div>
+      <div class="tab" onclick="showSection('analysis-tools')">
+        <i class="fas fa-analytics"></i> Analytics
+      </div>
+      <div class="tab premium-feature" onclick="showSection('portfolio-tools')">
+        <i class="fas fa-briefcase"></i> Portfolio
+      </div>
+    </div>
+
+    <!-- Basic Calculators Section -->
+    <div id="basic-calculators" class="calculator-section active">
+      <div class="calculator-grid">
+        <!-- Stock Average Calculator -->
+        <div class="calculator-card">
+          <h3><i class="fas fa-calculator"></i>Stock Average Calculator</h3>
+          <div class="input-group">
+            <label for="purchasePrice1">Purchase Price 1 (₹)</label>
+            <input type="number" id="purchasePrice1" placeholder="e.g. 100" step="0.01" min="0">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="quantity1">Quantity 1</label>
+            <input type="number" id="quantity1" placeholder="e.g. 10" min="1">
+            <i class="fas fa-boxes input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="purchasePrice2">Purchase Price 2 (₹) <span class="info-tooltip">?<span class="tooltip-text">Leave blank if you only have one purchase. You can add multiple purchases in the premium version.</span></span></label>
+            <input type="number" id="purchasePrice2" placeholder="e.g. 90 (optional)" step="0.01" min="0">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="quantity2">Quantity 2</label>
+            <input type="number" id="quantity2" placeholder="e.g. 5 (optional)" min="0">
+            <i class="fas fa-boxes input-icon"></i>
+          </div>
+          <button onclick="calculateStockAverage()">
+            <i class="fas fa-calculator"></i> Calculate Average Price
+          </button>
+          <div id="stockAverageResult" class="result">
+            <div class="result-title"><i class="fas fa-chart-line"></i> Average Price Result</div>
+            <div id="averagePriceValue" class="result-value neutral"></div>
+            <div id="averagePriceDetails" class="result-details"></div>
+          </div>
+        </div>
+
+        <!-- Profit Calculator -->
+        <div class="calculator-card">
+          <h3><i class="fas fa-money-bill-wave"></i>Profit Calculator</h3>
+          <div class="input-group">
+            <label for="profitPurchasePrice">Purchase Price (₹)</label>
+            <input type="number" id="profitPurchasePrice" placeholder="e.g. 100" step="0.01" min="0">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="profitSellingPrice">Selling Price (₹)</label>
+            <input type="number" id="profitSellingPrice" placeholder="e.g. 120" step="0.01" min="0">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="profitQuantity">Quantity</label>
+            <input type="number" id="profitQuantity" placeholder="e.g. 10" min="1">
+            <i class="fas fa-boxes input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="brokerage">Brokerage (%) <span class="info-tooltip">?<span class="tooltip-text">Enter brokerage percentage to calculate net profit. Premium version includes detailed breakdown of all charges.</span></span></label>
+            <input type="number" id="brokerage" placeholder="e.g. 0.5 (optional)" step="0.01" min="0" max="100">
+            <i class="fas fa-percent input-icon"></i>
+          </div>
+          <button onclick="calculateProfit()">
+            <i class="fas fa-calculator"></i> Calculate Profit/Loss
+          </button>
+          <div id="profitResult" class="result">
+            <div class="result-title"><i class="fas fa-coins"></i> Profit/Loss Result</div>
+            <div id="profitValue" class="result-value"></div>
+            <div id="profitDetails" class="result-details"></div>
+            <div class="chart-container" id="profitChart"></div>
+          </div>
+        </div>
+
+        <!-- Loss Recovery Calculator -->
+        <div class="calculator-card">
+          <h3><i class="fas fa-undo-alt"></i>Loss Recovery Calculator</h3>
+          <div class="input-group">
+            <label for="lossPurchasePrice">Purchase Price (₹)</label>
+            <input type="number" id="lossPurchasePrice" placeholder="e.g. 100" step="0.01" min="0">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="lossSellingPrice">Selling Price (₹)</label>
+            <input type="number" id="lossSellingPrice" placeholder="e.g. 80" step="0.01" min="0">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="lossQuantity">Quantity</label>
+            <input type="number" id="lossQuantity" placeholder="e.g. 10" min="1">
+            <i class="fas fa-boxes input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="recoveryTargetPrice">Target Recovery Price (₹) <span class="info-tooltip">?<span class="tooltip-text">Enter the price you plan to buy at to recover losses. Premium version provides multiple recovery scenarios.</span></span></label>
+            <input type="number" id="recoveryTargetPrice" placeholder="e.g. 75" step="0.01" min="0">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <button onclick="calculateLossRecovery()">
+            <i class="fas fa-calculator"></i> Calculate Recovery
+          </button>
+          <div id="lossRecoveryResult" class="result">
+            <div class="result-title"><i class="fas fa-life-ring"></i> Recovery Analysis</div>
+            <div id="recoveryValue" class="result-value"></div>
+            <div id="recoveryDetails" class="result-details"></div>
+          </div>
+        </div>
+
+        <!-- Risk Reward Calculator -->
+        <div class="calculator-card">
+          <h3><i class="fas fa-balance-scale"></i>Risk Reward Calculator</h3>
+          <div class="input-group">
+            <label for="entryPrice">Entry Price (₹)</label>
+            <input type="number" id="entryPrice" placeholder="e.g. 100" step="0.01" min="0">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="stopLossPrice">Stop Loss Price (₹)</label>
+            <input type="number" id="stopLossPrice" placeholder="e.g. 95" step="0.01" min="0">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="targetPrice">Target Price (₹)</label>
+            <input type="number" id="targetPrice" placeholder="e.g. 120" step="0.01" min="0">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="positionSize">Position Size (₹) <span class="info-tooltip">?<span class="tooltip-text">Total amount you're investing in this trade. Premium version includes position size optimization.</span></span></label>
+            <input type="number" id="positionSize" placeholder="e.g. 10000" step="0.01" min="0">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <button onclick="calculateRiskReward()">
+            <i class="fas fa-calculator"></i> Calculate Risk/Reward
+          </button>
+          <div id="riskRewardResult" class="result">
+            <div class="result-title"><i class="fas fa-shield-alt"></i> Risk/Reward Analysis</div>
+            <div id="riskRewardValue" class="result-value"></div>
+            <div id="riskRewardDetails" class="result-details"></div>
+            <div class="chart-container" id="riskRewardChart"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Advanced Calculators Section -->
+    <div id="advanced-calculators" class="calculator-section">
+      <div class="calculator-grid">
+        <!-- Position Size Calculator -->
+        <div class="calculator-card">
+          <h3><i class="fas fa-chart-pie"></i>Position Size Calculator</h3>
+          <div class="input-group">
+            <label for="accountSize">Account Size (₹)</label>
+            <input type="number" id="accountSize" placeholder="e.g. 100000" step="0.01" min="0">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="riskPercentage">Risk Percentage (%)</label>
+            <input type="number" id="riskPercentage" placeholder="e.g. 2" step="0.1" min="0" max="100">
+            <i class="fas fa-percent input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="entryPricePos">Entry Price (₹)</label>
+            <input type="number" id="entryPricePos" placeholder="e.g. 100" step="0.01" min="0">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="stopLossPricePos">Stop Loss Price (₹)</label>
+            <input type="number" id="stopLossPricePos" placeholder="e.g. 95" step="0.01" min="0">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <button onclick="calculatePositionSize()">
+            <i class="fas fa-calculator"></i> Calculate Position Size
+          </button>
+          <div id="positionSizeResult" class="result">
+            <div class="result-title"><i class="fas fa-chart-pie"></i> Position Size Result</div>
+            <div id="positionSizeValue" class="result-value neutral"></div>
+            <div id="positionSizeDetails" class="result-details"></div>
+          </div>
+        </div>
+
+        <!-- CAGR Calculator -->
+        <div class="calculator-card">
+          <h3><i class="fas fa-chart-bar"></i>CAGR Calculator</h3>
+          <div class="input-group">
+            <label for="initialInvestment">Initial Investment (₹)</label>
+            <input type="number" id="initialInvestment" placeholder="e.g. 10000" step="0.01" min="0">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="finalValue">Final Value (₹)</label>
+            <input type="number" id="finalValue" placeholder="e.g. 15000" step="0.01" min="0">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="investmentPeriod">Investment Period (Years)</label>
+            <input type="number" id="investmentPeriod" placeholder="e.g. 5" step="0.1" min="0.1">
+            <i class="fas fa-calendar-alt input-icon"></i>
+          </div>
+          <button onclick="calculateCAGR()">
+            <i class="fas fa-calculator"></i> Calculate CAGR
+          </button>
+          <div id="cagrResult" class="result">
+            <div class="result-title"><i class="fas fa-chart-line"></i> CAGR Result</div>
+            <div id="cagrValue" class="result-value neutral"></div>
+            <div id="cagrDetails" class="result-details"></div>
+            <div class="chart-container" id="cagrChart"></div>
+          </div>
+        </div>
+
+        <!-- Margin Calculator -->
+        <div class="calculator-card">
+          <h3><i class="fas fa-hand-holding-usd"></i>Margin Calculator</h3>
+          <div class="input-group">
+            <label for="stockPrice">Stock Price (₹)</label>
+            <input type="number" id="stockPrice" placeholder="e.g. 100" step="0.01" min="0">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="marginQuantity">Quantity</label>
+            <input type="number" id="marginQuantity" placeholder="e.g. 100" min="1">
+            <i class="fas fa-boxes input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="marginPercentage">Margin Percentage (%)</label>
+            <input type="number" id="marginPercentage" placeholder="e.g. 20" step="0.1" min="0" max="100">
+            <i class="fas fa-percent input-icon"></i>
+          </div>
+          <button onclick="calculateMargin()">
+            <i class="fas fa-calculator"></i> Calculate Margin
+          </button>
+          <div id="marginResult" class="result">
+            <div class="result-title"><i class="fas fa-money-bill-wave"></i> Margin Result</div>
+            <div id="marginValue" class="result-value neutral"></div>
+            <div id="marginDetails" class="result-details"></div>
+          </div>
+        </div>
+
+        <!-- Pivot Point Calculator -->
+        <div class="calculator-card">
+          <h3><i class="fas fa-crosshairs"></i>Pivot Point Calculator</h3>
+          <div class="input-group">
+            <label for="highPrice">High Price (₹)</label>
+                        <input type="number" id="highPrice" placeholder="e.g. 110" step="0.01" min="0">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="lowPrice">Low Price (₹)</label>
+            <input type="number" id="lowPrice" placeholder="e.g. 90" step="0.01" min="0">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="closePrice">Close Price (₹)</label>
+            <input type="number" id="closePrice" placeholder="e.g. 100" step="0.01" min="0">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <button onclick="calculatePivotPoints()">
+            <i class="fas fa-calculator"></i> Calculate Pivot Points
+          </button>
+          <div id="pivotResult" class="result">
+            <div class="result-title"><i class="fas fa-bullseye"></i> Pivot Points</div>
+            <div id="pivotValue" class="result-value neutral"></div>
+            <div id="pivotDetails" class="result-details"></div>
+          </div>
+        </div>
+
+        <!-- Options Calculator (Premium Feature) -->
+        <div class="calculator-card premium-feature">
+          <div class="premium-badge">Premium</div>
+          <h3><i class="fas fa-chess-knight"></i>Options Calculator</h3>
+          <div class="input-group">
+            <label for="optionType">Option Type</label>
+            <select id="optionType" class="premium-field">
+              <option value="call">Call</option>
+              <option value="put">Put</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="strikePrice">Strike Price (₹)</label>
+            <input type="number" id="strikePrice" placeholder="e.g. 100" step="0.01" min="0" class="premium-field">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="premiumPrice">Premium (₹)</label>
+            <input type="number" id="premiumPrice" placeholder="e.g. 5" step="0.01" min="0" class="premium-field">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="currentPrice">Current Price (₹)</label>
+            <input type="number" id="currentPrice" placeholder="e.g. 102" step="0.01" min="0" class="premium-field">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <button onclick="showPremiumAlert()" class="premium-btn">
+            <i class="fas fa-crown"></i> Unlock Premium Feature
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Analysis Tools Section -->
+    <div id="analysis-tools" class="calculator-section">
+      <div class="calculator-grid">
+        <!-- Volatility Calculator -->
+        <div class="calculator-card">
+          <h3><i class="fas fa-bolt"></i>Volatility Calculator</h3>
+          <div class="input-group">
+            <label for="highPriceVol">High Price (₹)</label>
+            <input type="number" id="highPriceVol" placeholder="e.g. 110" step="0.01" min="0">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="lowPriceVol">Low Price (₹)</label>
+            <input type="number" id="lowPriceVol" placeholder="e.g. 90" step="0.01" min="0">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="closePriceVol">Close Price (₹)</label>
+            <input type="number" id="closePriceVol" placeholder="e.g. 100" step="0.01" min="0">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <button onclick="calculateVolatility()">
+            <i class="fas fa-calculator"></i> Calculate Volatility
+          </button>
+          <div id="volatilityResult" class="result">
+            <div class="result-title"><i class="fas fa-wave-square"></i> Volatility Analysis</div>
+            <div id="volatilityValue" class="result-value neutral"></div>
+            <div id="volatilityDetails" class="result-details"></div>
+          </div>
+        </div>
+
+        <!-- Break Even Calculator -->
+        <div class="calculator-card">
+          <h3><i class="fas fa-equals"></i>Break Even Calculator</h3>
+          <div class="input-group">
+            <label for="bePurchasePrice">Purchase Price (₹)</label>
+            <input type="number" id="bePurchasePrice" placeholder="e.g. 100" step="0.01" min="0">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="beQuantity">Quantity</label>
+            <input type="number" id="beQuantity" placeholder="e.g. 10" min="1">
+            <i class="fas fa-boxes input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="beBrokerage">Brokerage (%)</label>
+            <input type="number" id="beBrokerage" placeholder="e.g. 0.5" step="0.01" min="0" max="100">
+            <i class="fas fa-percent input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="beOtherCharges">Other Charges (₹)</label>
+            <input type="number" id="beOtherCharges" placeholder="e.g. 20 (optional)" step="0.01" min="0">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <button onclick="calculateBreakEven()">
+            <i class="fas fa-calculator"></i> Calculate Break Even
+          </button>
+          <div id="breakEvenResult" class="result">
+            <div class="result-title"><i class="fas fa-percentage"></i> Break Even Analysis</div>
+            <div id="breakEvenValue" class="result-value neutral"></div>
+            <div id="breakEvenDetails" class="result-details"></div>
+          </div>
+        </div>
+
+        <!-- Stock Return Calculator -->
+        <div class="calculator-card">
+          <h3><i class="fas fa-percentage"></i>Stock Return Calculator</h3>
+          <div class="input-group">
+            <label for="initialPrice">Initial Price (₹)</label>
+            <input type="number" id="initialPrice" placeholder="e.g. 100" step="0.01" min="0">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="finalPrice">Final Price (₹)</label>
+            <input type="number" id="finalPrice" placeholder="e.g. 120" step="0.01" min="0">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="dividends">Dividends Received (₹)</label>
+            <input type="number" id="dividends" placeholder="e.g. 5 (optional)" step="0.01" min="0">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="holdingPeriod">Holding Period (Years)</label>
+            <input type="number" id="holdingPeriod" placeholder="e.g. 1" step="0.1" min="0.1">
+            <i class="fas fa-calendar-alt input-icon"></i>
+          </div>
+          <button onclick="calculateStockReturn()">
+            <i class="fas fa-calculator"></i> Calculate Return
+          </button>
+          <div id="stockReturnResult" class="result">
+            <div class="result-title"><i class="fas fa-chart-line"></i> Return Analysis</div>
+            <div id="stockReturnValue" class="result-value neutral"></div>
+            <div id="stockReturnDetails" class="result-details"></div>
+            <div class="chart-container" id="returnChart"></div>
+          </div>
+        </div>
+
+        <!-- Portfolio Risk Calculator (Premium) -->
+        <div class="calculator-card premium-feature">
+          <div class="premium-badge">Premium</div>
+          <h3><i class="fas fa-shield-alt"></i>Portfolio Risk Calculator</h3>
+          <div class="input-group">
+            <label for="portfolioValue">Portfolio Value (₹)</label>
+            <input type="number" id="portfolioValue" placeholder="e.g. 500000" step="0.01" min="0" class="premium-field">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="riskTolerance">Risk Tolerance (%)</label>
+            <input type="number" id="riskTolerance" placeholder="e.g. 5" step="0.1" min="0" max="100" class="premium-field">
+            <i class="fas fa-percent input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="volatilityEstimate">Volatility Estimate (%)</label>
+            <input type="number" id="volatilityEstimate" placeholder="e.g. 20" step="0.1" min="0" max="100" class="premium-field">
+            <i class="fas fa-percent input-icon"></i>
+          </div>
+          <button onclick="showPremiumAlert()" class="premium-btn">
+            <i class="fas fa-crown"></i> Unlock Premium Feature
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Portfolio Tools Section (Premium) -->
+    <div id="portfolio-tools" class="calculator-section">
+      <div class="calculator-grid">
+        <!-- Portfolio Allocation Calculator -->
+        <div class="calculator-card premium-feature">
+          <div class="premium-badge">Premium</div>
+          <h3><i class="fas fa-pie-chart"></i>Portfolio Allocation</h3>
+          <div id="portfolioAssetsContainer">
+            <div class="input-group portfolio-asset">
+              <label>Asset 1</label>
+              <div class="portfolio-asset-inputs">
+                <input type="text" placeholder="Stock Name" class="premium-field">
+                <input type="number" placeholder="Value (₹)" step="0.01" min="0" class="premium-field">
+                <button class="remove-asset-btn" onclick="removeAsset(this)"><i class="fas fa-times"></i></button>
+              </div>
+            </div>
+          </div>
+          <button onclick="addAsset()" class="secondary-btn">
+            <i class="fas fa-plus"></i> Add Asset
+          </button>
+          <button onclick="showPremiumAlert()" class="premium-btn">
+            <i class="fas fa-crown"></i> Analyze Portfolio
+          </button>
+        </div>
+
+        <!-- Dividend Calculator -->
+        <div class="calculator-card premium-feature">
+          <div class="premium-badge">Premium</div>
+          <h3><i class="fas fa-money-bill-trend-up"></i>Dividend Calculator</h3>
+          <div class="input-group">
+            <label for="divShares">Number of Shares</label>
+            <input type="number" id="divShares" placeholder="e.g. 100" min="1" class="premium-field">
+            <i class="fas fa-boxes input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="divAmount">Dividend per Share (₹)</label>
+            <input type="number" id="divAmount" placeholder="e.g. 5" step="0.01" min="0" class="premium-field">
+            <i class="fas fa-rupee-sign input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="divFrequency">Payment Frequency</label>
+            <select id="divFrequency" class="premium-field">
+              <option value="quarterly">Quarterly</option>
+              <option value="annual">Annual</option>
+              <option value="semi-annual">Semi-Annual</option>
+              <option value="monthly">Monthly</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="divYears">Years</label>
+            <input type="number" id="divYears" placeholder="e.g. 5" min="1" step="1" class="premium-field">
+            <i class="fas fa-calendar-alt input-icon"></i>
+          </div>
+          <button onclick="showPremiumAlert()" class="premium-btn">
+            <i class="fas fa-crown"></i> Calculate Dividend Income
+          </button>
+        </div>
+
+        <!-- Stock Comparison Tool -->
+        <div class="calculator-card premium-feature">
+          <div class="premium-badge">Premium</div>
+          <h3><i class="fas fa-not-equal"></i>Stock Comparison</h3>
+          <div class="input-group">
+            <label for="stock1">Stock 1</label>
+            <input type="text" id="stock1" placeholder="e.g. RELIANCE" class="premium-field">
+          </div>
+          <div class="input-group">
+            <label for="stock2">Stock 2</label>
+            <input type="text" id="stock2" placeholder="e.g. TATASTEEL" class="premium-field">
+          </div>
+          <div class="input-group">
+            <label for="comparisonMetric">Comparison Metric</label>
+            <select id="comparisonMetric" class="premium-field">
+              <option value="pe">P/E Ratio</option>
+              <option value="pb">P/B Ratio</option>
+              <option value="divYield">Dividend Yield</option>
+              <option value="roce">ROCE</option>
+              <option value="debtEquity">Debt/Equity</option>
+            </select>
+          </div>
+          <button onclick="showPremiumAlert()" class="premium-btn">
+            <i class="fas fa-crown"></i> Compare Stocks
+          </button>
+        </div>
+
+        <!-- Stock Screener (Premium) -->
+        <div class="calculator-card premium-feature">
+          <div class="premium-badge">Premium</div>
+          <h3><i class="fas fa-filter"></i>Stock Screener</h3>
+          <div class="input-group">
+            <label for="screenerMarketCap">Market Cap</label>
+            <select id="screenerMarketCap" class="premium-field">
+              <option value="">Any</option>
+              <option value="large">Large Cap</option>
+              <option value="mid">Mid Cap</option>
+              <option value="small">Small Cap</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="screenerPERatio">Max P/E Ratio</label>
+            <input type="number" id="screenerPERatio" placeholder="e.g. 25" min="0" class="premium-field">
+          </div>
+          <div class="input-group">
+            <label for="screenerDivYield">Min Dividend Yield (%)</label>
+            <input type="number" id="screenerDivYield" placeholder="e.g. 2" step="0.1" min="0" class="premium-field">
+            <i class="fas fa-percent input-icon"></i>
+          </div>
+          <div class="input-group">
+            <label for="screenerROCE">Min ROCE (%)</label>
+            <input type="number" id="screenerROCE" placeholder="e.g. 15" step="0.1" min="0" class="premium-field">
+            <i class="fas fa-percent input-icon"></i>
+          </div>
+          <button onclick="showPremiumAlert()" class="premium-btn">
+            <i class="fas fa-crown"></i> Screen Stocks
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Action Button -->
+  <button class="fab" onclick="scrollToTop()">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <!-- Theme Toggle Button -->
+  <button class="theme-toggle" onclick="toggleTheme()">
+    <i class="fas fa-moon"></i>
+  </button>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast">
+    <i class="fas fa-check-circle"></i>
+    <span id="toast-message">Calculation completed!</span>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    // Theme management
+    function toggleTheme() {
+      const body = document.body;
+      const currentTheme = body.getAttribute('data-theme');
+      const themeToggle = document.querySelector('.theme-toggle i');
+      
+      if (currentTheme === 'dark') {
+        body.removeAttribute('data-theme');
+        themeToggle.classList.remove('fa-sun');
+        themeToggle.classList.add('fa-moon');
+      } else {
+        body.setAttribute('data-theme', 'dark');
+        themeToggle.classList.remove('fa-moon');
+        themeToggle.classList.add('fa-sun');
+      }
+    }
+
+    // Show/hide sections based on tab selection
+    function showSection(sectionId) {
+      // Hide all sections
+      document.querySelectorAll('.calculator-section').forEach(section => {
+        section.classList.remove('active');
+      });
+      
+      // Show selected section
+      document.getElementById(sectionId).classList.add('active');
+      
+      // Update tab styles
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      event.currentTarget.classList.add('active');
+      
+      // Scroll to top of section
+      document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // Scroll to top function
+    function scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+
+    // Show/hide FAB based on scroll position
+    window.addEventListener('scroll', function() {
+      const fab = document.querySelector('.fab');
+      if (window.pageYOffset > 300) {
+        fab.style.display = 'flex';
+      } else {
+        fab.style.display = 'none';
+      }
+    });
+
+    // Show toast notification
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toast-message');
+      const toastIcon = toast.querySelector('i');
+      
+      toastMessage.textContent = message;
+      toast.className = `toast ${type}`;
+      toastIcon.className = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+      
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // Premium feature alert
+    function showPremiumAlert() {
+      showToast('This is a premium feature. Upgrade to access.', 'error');
+    }
+
+    // Portfolio asset management
+    function addAsset() {
+      const container = document.getElementById('portfolioAssetsContainer');
+      const assetCount = container.children.length + 1;
+      
+      const assetDiv = document.createElement('div');
+      assetDiv.className = 'input-group portfolio-asset';
+      assetDiv.innerHTML = `
+        <label>Asset ${assetCount}</label>
+        <div class="portfolio-asset-inputs">
+          <input type="text" placeholder="Stock Name" class="premium-field">
+          <input type="number" placeholder="Value (₹)" step="0.01" min="0" class="premium-field">
+          <button class="remove-asset-btn" onclick="removeAsset(this)"><i class="fas fa-times"></i></button>
+        </div>
+      `;
+      
+      container.appendChild(assetDiv);
+    }
+
+    function removeAsset(button) {
+      const container = document.getElementById('portfolioAssetsContainer');
+      if (container.children.length > 1) {
+        button.closest('.portfolio-asset').remove();
+        // Renumber remaining assets
+        document.querySelectorAll('.portfolio-asset label').forEach((label, index) => {
+          label.textContent = `Asset ${index + 1}`;
+        });
+      } else {
+        showToast('You need at least one asset', 'error');
+      }
+    }
+
+    // Stock Average Calculator
+    function calculateStockAverage() {
+      const purchasePrice1 = parseFloat(document.getElementById('purchasePrice1').value) || 0;
+      const quantity1 = parseInt(document.getElementById('quantity1').value) || 0;
+      const purchasePrice2 = parseFloat(document.getElementById('purchasePrice2').value) || 0;
+      const quantity2 = parseInt(document.getElementById('quantity2').value) || 0;
+      
+      if (isNaN(purchasePrice1) || isNaN(quantity1) || quantity1 <= 0) {
+        showToast('Please enter valid numbers for at least the first purchase', 'error');
+        return;
+      }
+      
+      const totalCost = (purchasePrice1 * quantity1) + (purchasePrice2 * quantity2);
+      const totalQuantity = quantity1 + quantity2;
+      const averagePrice = totalCost / totalQuantity;
+      
+      const resultElement = document.getElementById('stockAverageResult');
+      document.getElementById('averagePriceValue').innerHTML = `₹${averagePrice.toFixed(2)} <span class="text-muted">per share</span>`;
+      
+      let details = `Total Investment: ₹${totalCost.toFixed(2)}\n`;
+      details += `Total Shares: ${totalQuantity}\n`;
+      if (purchasePrice2 > 0) {
+        details += `First Purchase: ₹${purchasePrice1.toFixed(2)} × ${quantity1}\n`;
+        details += `Second Purchase: ₹${purchasePrice2.toFixed(2)} × ${quantity2}`;
+      }
+      
+      document.getElementById('averagePriceDetails').innerHTML = details.replace(/\n/g, '<br>');
+      resultElement.style.display = 'block';
+      showToast('Average price calculated successfully');
+    }
+
+    // Profit Calculator
+    function calculateProfit() {
+      const purchasePrice = parseFloat(document.getElementById('profitPurchasePrice').value);
+      const sellingPrice = parseFloat(document.getElementById('profitSellingPrice').value);
+      const quantity = parseInt(document.getElementById('profitQuantity').value);
+      const brokerage = parseFloat(document.getElementById('brokerage').value) || 0;
+      
+      if (isNaN(purchasePrice) || isNaN(sellingPrice) || isNaN(quantity) || quantity <= 0) {
+        showToast('Please enter valid numbers for all required fields', 'error');
+        return;
+      }
+      
+      const grossProfit = (sellingPrice - purchasePrice) * quantity;
+      const brokerageAmount = (purchasePrice * quantity * brokerage / 100) + (sellingPrice * quantity * brokerage / 100);
+      const netProfit = grossProfit - brokerageAmount;
+      const returnPercentage = ((grossProfit / (purchasePrice * quantity)) * 100).toFixed(2);
+      
+      const resultElement = document.getElementById('profitResult');
+      const profitValueElement = document.getElementById('profitValue');
+      
+      if (grossProfit > 0) {
+        profitValueElement.className = 'result-value profit';
+        profitValueElement.innerHTML = `Gross Profit: <span>₹${grossProfit.toFixed(2)}</span> (${returnPercentage}%)`;
+        
+        let details = `Net Profit: ₹${netProfit.toFixed(2)} (after brokerage)\n`;
+        if (brokerage > 0) {
+          details += `Brokerage Paid: ₹${brokerageAmount.toFixed(2)} (${brokerage}%)\n`;
+        }
+        details += `Purchase Value: ₹${(purchasePrice * quantity).toFixed(2)}\n`;
+        details += `Selling Value: ₹${(sellingPrice * quantity).toFixed(2)}`;
+        
+        document.getElementById('profitDetails').innerHTML = details.replace(/\n/g, '<br>');
+      } else {
+        profitValueElement.className = 'result-value loss';
+        profitValueElement.innerHTML = `Gross Loss: <span>₹${Math.abs(grossProfit).toFixed(2)}</span> (${returnPercentage}%)`;
+        
+        let details = `Net Loss: ₹${Math.abs(netProfit).toFixed(2)} (after brokerage)\n`;
+        if (brokerage > 0) {
+          details += `Brokerage Paid: ₹${brokerageAmount.toFixed(2)} (${brokerage}%)\n`;
+        }
+        details += `Purchase Value: ₹${(purchasePrice * quantity).toFixed(2)}\n`;
+        details += `Selling Value: ₹${(sellingPrice * quantity).toFixed(2)}`;
+        
+        document.getElementById('profitDetails').innerHTML = details.replace(/\n/g, '<br>');
+      }
+      
+      resultElement.style.display = 'block';
+      showToast(grossProfit > 0 ? 'Profit calculated!' : 'Loss calculated');
+      
+      // Simple chart visualization
+      updateProfitChart(purchasePrice, sellingPrice);
+    }
+
+    // Simple chart for profit visualization
+    function updateProfitChart(purchasePrice, sellingPrice) {
+      const chartContainer = document.getElementById('profitChart');
+      chartContainer.innerHTML = `
+        <div style="width:100%;height:100%;display:flex;align-items:flex-end;gap:2px;">
+          <div style="height:${Math.min(100, (purchasePrice / sellingPrice) * 100)}%;background:var(--danger-color);flex:1;"></div>
+          <div style="height:100%;background:var(--success-color);flex:1;"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:8px;">
+          <span style="font-size:12px;">Purchase<br>₹${purchasePrice.toFixed(2)}</span>
+          <span style="font-size:12px;">Selling<br>₹${sellingPrice.toFixed(2)}</span>
+        </div>
+      `;
+    }
+
+    // Loss Recovery Calculator
+    function calculateLossRecovery() {
+      const purchasePrice = parseFloat(document.getElementById('lossPurchasePrice').value);
+      const sellingPrice = parseFloat(document.getElementById('lossSellingPrice').value);
+      const quantity = parseInt(document.getElementById('lossQuantity').value);
+      const recoveryTargetPrice = parseFloat(document.getElementById('recoveryTargetPrice').value);
+      
+      if (isNaN(purchasePrice) || isNaN(sellingPrice) || isNaN(quantity) || quantity <= 0 || isNaN(recoveryTargetPrice)) {
+        showToast('Please enter valid numbers for all fields', 'error');
+        return;
+      }
+      
+      if (sellingPrice >= purchasePrice) {
+        showToast('This is not a loss scenario', 'error');
+        return;
+      }
+      
+      const lossPerShare = purchasePrice - sellingPrice;
+      const totalLoss = lossPerShare * quantity;
+      
+      // Calculate how many shares needed to buy at recovery price to recover loss
+      const potentialProfitPerShare = sellingPrice - recoveryTargetPrice;
+      if (potentialProfitPerShare <= 0) {
+        showToast('Recovery price must be less than selling price', 'error');
+        return;
+      }
+      
+      const sharesNeeded = Math.ceil(totalLoss / potentialProfitPerShare);
+      const totalInvestmentNeeded = recoveryTargetPrice * sharesNeeded;
+      const potentialTotalProfit = potentialProfitPerShare * sharesNeeded;
+      
+      const resultElement = document.getElementById('lossRecoveryResult');
+      const recoveryValueElement = document.getElementById('recoveryValue');
+      
+      recoveryValueElement.className = 'result-value';
+      recoveryValueElement.innerHTML = `Total Loss: <span class="loss">₹${totalLoss.toFixed(2)}</span>`;
+      
+      let details = `<strong>Recovery Strategy:</strong>\n`;
+      details += `Buy ${sharesNeeded} shares at ₹${recoveryTargetPrice.toFixed(2)}/share\n`;
+      details += `Total Investment Needed: ₹${totalInvestmentNeeded.toFixed(2)}\n\n`;
+      details += `<strong>When you sell at ₹${sellingPrice.toFixed(2)}:</strong>\n`;
+      details += `Profit from new shares: ₹${potentialTotalProfit.toFixed(2)}\n`;
+      details += `Net Result: ₹${(potentialTotalProfit - totalLoss).toFixed(2)}`;
+      
+      document.getElementById('recoveryDetails').innerHTML = details.replace(/\n/g, '<br>');
+      resultElement.style.display = 'block';
+      showToast('Recovery strategy calculated');
+    }
+
+    // Risk Reward Calculator
+    function calculateRiskReward() {
+      const entryPrice = parseFloat(document.getElementById('entryPrice').value);
+      const stopLossPrice = parseFloat(document.getElementById('stopLossPrice').value);
+      const targetPrice = parseFloat(document.getElementById('targetPrice').value);
+      const positionSize = parseFloat(document.getElementById('positionSize').value);
+      
+      if (isNaN(entryPrice) || isNaN(stopLossPrice) || isNaN(targetPrice) || isNaN(positionSize)) {
+        showToast('Please enter valid numbers for all fields', 'error');
+        return;
+      }
+      
+      if (stopLossPrice >= entryPrice) {
+        showToast('Stop loss must be below entry price', 'error');
+        return;
+      }
+      
+      if (targetPrice <= entryPrice) {
+        showToast('Target price must be above entry price', 'error');
+        return;
+      }
+      
+      const riskPerShare = entryPrice - stopLossPrice;
+      const rewardPerShare = targetPrice - entryPrice;
+      const riskRewardRatio = rewardPerShare / riskPerShare;
+      
+      const shares = positionSize / entryPrice;
+      const totalRisk = riskPerShare * shares;
+      const totalReward = rewardPerShare * shares;
+      
+      const resultElement = document.getElementById('riskRewardResult');
+      document.getElementById('riskRewardValue').innerHTML = `
+        Risk/Reward Ratio: <span>1:${riskRewardRatio.toFixed(2)}</span>
+      `;
+      
+      let details = `<strong>Per Share Analysis:</strong>\n`;
+      details += `Risk: ₹${riskPerShare.toFixed(2)} (${((riskPerShare / entryPrice) * 100).toFixed(2)}%)\n`;
+      details += `Reward: ₹${rewardPerShare.toFixed(2)} (${((rewardPerShare / entryPrice) * 100).toFixed(2)}%)\n\n`;
+      details += `<strong>Position Analysis (${shares.toFixed(2)} shares):</strong>\n`;
+      details += `Total Risk: ₹${totalRisk.toFixed(2)}\n`;
+      details += `Potential Reward: ₹${totalReward.toFixed(2)}`;
+      
+      document.getElementById('riskRewardDetails').innerHTML = details.replace(/\n/g, '<br>');
+      resultElement.style.display = 'block';
+      showToast('Risk/Reward analysis completed');
+      
+      // Simple chart visualization
+      updateRiskRewardChart(entryPrice, stopLossPrice, targetPrice);
+    }
+
+    // Simple chart for risk/reward visualization
+    function updateRiskRewardChart(entry, stopLoss, target) {
+      const chartContainer = document.getElementById('riskRewardChart');
+      const maxValue = Math.max(entry * 1.1, target * 1.1);
+      const minValue = Math.min(entry * 0.9, stopLoss * 0.9);
+      const range = maxValue - minValue;
+      
+      chartContainer.innerHTML = `
+        <div style="width:100%;height:100%;position:relative;">
+          <div style="position:absolute;bottom:${((entry - minValue)/range)*100}%;left:0;right:0;height:2px;background:var(--primary-color);"></div>
+          <div style="position:absolute;bottom:${((stopLoss - minValue)/range)*100}%;left:0;right:0;height:2px;background:var(--danger-color);"></div>
+          <div style="position:absolute;bottom:${((target - minValue)/range)*100}%;left:0;right:0;height:2px;background:var(--success-color);"></div>
+          <div style="position:absolute;bottom:0;left:10px;font-size:10px;">₹${minValue.toFixed(2)}</div>
+          <div style="position:absolute;top:0;left:10px;font-size:10px;">₹${maxValue.toFixed(2)}</div>
+          <div style="position:absolute;bottom:${((entry - minValue)/range)*100}%;left:10px;font-size:10px;">Entry ₹${entry.toFixed(2)}</div>
+          <div style="position:absolute;bottom:${((stopLoss - minValue)/range)*100}%;left:10px;font-size:10px;">SL ₹${stopLoss.toFixed(2)}</div>
+          <div style="position:absolute;bottom:${((target - minValue)/range)*100}%;right:10px;font-size:10px;">Target ₹${target.toFixed(2)}</div>
+        </div>
+      `;
+    }
+
+    // Position Size Calculator
+    function calculatePositionSize() {
+      const accountSize = parseFloat(document.getElementById('accountSize').value);
+      const riskPercentage = parseFloat(document.getElementById('riskPercentage').value);
+      const entryPrice = parseFloat(document.getElementById('entryPricePos').value);
+      const stopLossPrice = parseFloat(document.getElementById('stopLossPricePos').value);
+      
+      if (isNaN(accountSize) || isNaN(riskPercentage) || isNaN(entryPrice) || isNaN(stopLossPrice)) {
+        showToast('Please enter valid numbers for all fields', 'error');
+        return;
+      }
+      
+      if (stopLossPrice >= entryPrice) {
+        showToast('Stop loss must be below entry price', 'error');
+        return;
+      }
+      
+      const riskAmount = accountSize * (riskPercentage / 100);
+      const riskPerShare = entryPrice - stopLossPrice;
+      const positionSize = Math.floor(riskAmount / riskPerShare);
+      const totalInvestment = positionSize * entryPrice;
+      const portfolioPercentage = (totalInvestment / accountSize) * 100;
+      
+      const resultElement = document.getElementById('positionSizeResult');
+      document.getElementById('positionSizeValue').innerHTML = `
+        Buy <span>${positionSize}</span> shares
+      `;
+      
+      let details = `<strong>Risk Management:</strong>\n`;
+      details += `Risk Amount: ₹${riskAmount.toFixed(2)} (${riskPercentage}% of account)\n`;
+      details += `Risk Per Share: ₹${riskPerShare.toFixed(2)}\n\n`;
+      details += `<strong>Position Details:</strong>\n`;
+      details += `Entry Price: ₹${entryPrice.toFixed(2)}\n`;
+      details += `Total Investment: ₹${totalInvestment.toFixed(2)} (${portfolioPercentage.toFixed(2)}% of account)`;
+      
+      document.getElementById('positionSizeDetails').innerHTML = details.replace(/\n/g, '<br>');
+      resultElement.style.display = 'block';
+      showToast('Position size calculated');
+    }
+
+    // CAGR Calculator
+    function calculateCAGR() {
+      const initialInvestment = parseFloat(document.getElementById('initialInvestment').value);
+      const finalValue = parseFloat(document.getElementById('finalValue').value);
+      const investmentPeriod = parseFloat(document.getElementById('investmentPeriod').value);
+      
+      if (isNaN(initialInvestment) || isNaN(finalValue) || isNaN(investmentPeriod) || investmentPeriod <= 0) {
+        showToast('Please enter valid numbers for all fields', 'error');
+        return;
+      }
+      
+      if (initialInvestment <= 0) {
+        showToast('Initial investment must be positive', 'error');
+        return;
+      }
+      
+      const cagr = (Math.pow(finalValue / initialInvestment	

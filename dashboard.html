@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safari Dashboard Pro</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    
+	
+	<div class="Safari-container">
+        <!-- Top Navigation Bar -->
+        <nav class="top-nav">
+            <div class="nav-left">
+                <div class="logo">
+                    <span class="logo-text">Safari</span>
+                    <span class="demo-badge text-danger">DEMO</span>
+                </div>
+                <div class="market-hours">
+                    <span class="market-status open">Market Open</span>
+                    <span class="current-time">10:57:42 AM</span>
+                </div>
+            </div>
+            <div class="nav-right">
+                <!-- Added buttons before user profile -->
+                
+                <div class="nav-item">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-count">3</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-cog"></i>
+                </div>
+				 <!-- Added buttons before user profile -->
+                <a href="C:\Users\dlabh\OneDrive\Downloads\stock-market-website\dashboard1.html"  target="_blank" class="nav-btn stock-news-btn">
+                    <i class="fas fa-newspaper"></i>
+                    <span>Stock News</span>
+                </a>
+                <a href="C:\Users\dlabh\OneDrive\Downloads\stock-market-website\dashboard2.html" target="_blank" class="nav-btn calculator-btn">
+                    <i class="fas fa-calculator"></i>
+                    <span>Calculator</span>
+                </a>
+                <div class="user-profile">
+                    <div class="avatar bg-danger text-white">D</div>
+                    <span class="username">Demo User</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </nav>
+		
+	
+	
+
+        <!-- Main Dashboard Layout -->
+        <div class="dashboard-layout">
+            <!-- Left Sidebar -->
+            <aside class="app-sidebar">
+                <div class="sidebar-header">
+                    <div class="portfolio-summary">
+                        <div class="portfolio-value">₹1,24,567.89</div>
+                        <div class="portfolio-change positive">+2.45% <i class="fas fa-arrow-up"></i></div>
+                    </div>
+                </div>
+
+                <nav class="main-menu">
+                    <ul>
+                        <li class="active">
+                            <a href="#">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fas fa-search-dollar"></i>
+                                <span>Marketwatch</span>
+                                <span class="menu-badge">5</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fas fa-briefcase"></i>
+                                <span>Portfolio</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fas fa-exchange-alt"></i>
+                                <span>Orders</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fas fa-boxes"></i>
+                                <span>Holdings</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <span>Funds</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fas fa-chart-bar"></i>
+                                <span>Charts</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fas fa-history"></i>
+                                <span>History</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <div class="sidebar-footer">
+                    <div class="quick-actions">
+                        <button class="quick-action-btn">
+                            <i class="fas fa-plus"></i> New Order
+                        </button>
+                        <button class="quick-action-btn">
+                            <i class="fas fa-chart-pie"></i> Analytics
+                        </button>
+                    </div>
+                    <div class="app-settings">
+                        <a href="#"><i class="fas fa-moon"></i> Dark Mode</a>
+                        <a href="#"><i class="fas fa-question-circle"></i> Help</a>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content Area -->
+            <main class="main-content">
+                <!-- Market Overview Section -->
+                <section class="market-overview">
+                    <div class="section-header">
+                        <h2>Market Overview</h2>
+                        <div class="section-actions">
+                            <div class="time-filters">
+                                <button class="time-filter active">1D</button>
+                                <button class="time-filter">1W</button>
+                                <button class="time-filter">1M</button>
+                                <button class="time-filter">1Y</button>
+                            </div>
+                            <button class="refresh-btn">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="indices-container">
+                        <div class="index-card">
+                            <div class="index-header">
+                                <span class="index-name">NIFTY 50</span>
+                                <span class="index-live-badge">
+                                    <span class="live-dot"></span> LIVE
+                                </span>
+                            </div>
+                            <div class="index-value">18,181.75</div>
+                            <div class="index-change negative">
+                                <span>-104.75 (-0.57%)</span>
+                                <i class="fas fa-arrow-down"></i>
+                            </div>
+                            <div class="index-chart">
+                                <canvas id="niftyChart" height="60"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="index-card">
+                            <div class="index-header">
+                                <span class="index-name">SENSEX</span>
+                                <span class="index-live-badge">
+                                    <span class="live-dot"></span> LIVE
+                                </span>
+                            </div>
+                            <div class="index-value">61,560.64</div>
+                            <div class="index-change negative">
+                                <span>-371.83 (-0.60%)</span>
+                                <i class="fas fa-arrow-down"></i>
+                            </div>
+                            <div class="index-chart">
+                                <canvas id="sensexChart" height="60"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="index-card">
+                            <div class="index-header">
+                                <span class="index-name">NIFTY BANK</span>
+                            </div>
+                            <div class="index-value">42,876.35</div>
+                            <div class="index-change positive">
+                                <span>+287.45 (+0.67%)</span>
+                                <i class="fas fa-arrow-up"></i>
+                            </div>
+                            <div class="index-chart">
+                                <canvas id="bankChart" height="60"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Market Watch Section -->
+                <section class="market-watch">
+                    <div class="section-header">
+                        <h2>Market Watch</h2>
+                        <div class="section-actions">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" placeholder="Search stocks, ETFs, MF">
+                            </div>
+                            <div class="watchlist-actions">
+                                <button class="watchlist-btn active">Default</button>
+                                <button class="watchlist-btn">Favorites</button>
+                                <button class="watchlist-btn">+ New</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="market-table-container">
+                        <table class="market-table">
+                            <thead>
+                                <tr>
+                                    <th class="sortable">Symbol <i class="fas fa-sort"></i></th>
+                                    <th class="sortable">LTP <i class="fas fa-sort"></i></th>
+                                    <th class="sortable">Change <i class="fas fa-sort"></i></th>
+                                    <th class="sortable">% Change <i class="fas fa-sort"></i></th>
+                                    <th>Volume</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Portfolio & Charts Section -->
+                <section class="portfolio-section">
+                    <div class="portfolio-charts">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>Portfolio Allocation</h3>
+                                <div class="chart-actions">
+                                    <button class="chart-action-btn active">Equity</button>
+                                    <button class="chart-action-btn">Derivatives</button>
+                                    <button class="chart-action-btn">MF</button>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="allocationChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>Daily P&L Trend</h3>
+                                <div class="chart-timeframe">
+                                    <span>1M</span>
+                                    <span class="active">3M</span>
+                                    <span>6M</span>
+                                    <span>1Y</span>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="pnlChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quick-trade-panel">
+                        <div class="trade-header">
+                            <h3>Quick Trade</h3>
+                            <div class="trade-tabs">
+                                <button class="trade-tab active">BUY</button>
+                                <button class="trade-tab">SELL</button>
+                            </div>
+                        </div>
+                        
+                        <div class="trade-form">
+                            <div class="form-group">
+                                <label>Symbol</label>
+                                <div class="search-input">
+                                    <input type="text" placeholder="Search stock">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Quantity</label>
+                                    <input type="number" placeholder="0">
+                                </div>
+                                <div class="form-group">
+                                    <label>Price</label>
+                                    <div class="price-input">
+                                        <input type="text" placeholder="Market">
+                                        <span class="price-type">MKT</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Order Type</label>
+                                <select>
+                                    <option>Market</option>
+                                    <option>Limit</option>
+                                    <option>SL</option>
+                                    <option>SL-M</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Product</label>
+                                <select>
+                                    <option>CNC</option>
+                                    <option>MIS</option>
+                                    <option>NRML</option>
+                                </select>
+                            </div>
+                            
+                            <div class="order-summary">
+                                <div class="summary-row">
+                                    <span>Estimated Amount</span>
+                                    <span>₹0.00</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span>Brokerage</span>
+                                    <span>₹0.00</span>
+                                </div>
+                                <div class="summary-row total">
+                                    <span>Total Amount</span>
+                                    <span>₹0.00</span>
+                                </div>
+                            </div>
+                            
+                            <button class="place-order-btn">Place Order</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Recent Activity Section -->
+                <section class="activity-section">
+                    <div class="section-header">
+                        <h2>Recent Activity</h2>
+                        <div class="activity-tabs">
+                            <button class="activity-tab active">Orders</button>
+                            <button class="activity-tab">Trades</button>
+                            <button class="activity-tab">Positions</button>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-table-container">
+                        <table class="activity-table">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Symbol</th>
+                                    <th>Transaction</th>
+                                    <th>Qty</th>
+                                    <th>Price</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>10:15 AM</td>
+                                    <td>RELIANCE</td>
+                                    <td class="buy">BUY</td>
+                                    <td>5</td>
+                                    <td>2,425.50</td>
+                                    <td class="completed">Completed</td>
+                                </tr>
+                                <tr>
+                                    <td>11:30 AM</td>
+                                    <td>INFY</td>
+                                    <td class="sell">SELL</td>
+                                    <td>10</td>
+                                    <td>1,410.25</td>
+                                    <td class="completed">Completed</td>
+                                </tr>
+                                <tr>
+                                    <td>1:45 PM</td>
+                                    <td>HDFCBANK</td>
+                                    <td class="buy">BUY</td>
+                                    <td>8</td>
+                                    <td>1,575.00</td>
+                                    <td class="pending">Pending</td>
+                                </tr>
+                                <tr>
+                                    <td>2:20 PM</td>
+                                    <td>TCS</td>
+                                    <td class="sell">SELL</td>
+                                    <td>15</td>
+                                    <td>3,520.90</td>
+                                    <td class="rejected">Rejected</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </main>
+
+            <!-- Right Sidebar -->
+            <aside class="right-sidebar">
+                <div class="sidebar-widget">
+                    <div class="widget-header">
+                        <h3>Holdings Summary</h3>
+                        <div class="widget-actions">
+                            <button class="widget-action-btn"><i class="fas fa-sync-alt"></i></button>
+                            <button class="widget-action-btn"><i class="fas fa-ellipsis-v"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="holdings-stats">
+                        <div class="stat-card">
+                            <div class="stat-value">₹13,23,456</div>
+                            <div class="stat-label">Current Value</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value positive">+16.90%</div>
+                            <div class="stat-label">P&L</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">₹11,23,456</div>
+                            <div class="stat-label">Invested</div>
+                        </div>
+                    </div>
+                    
+                    <div class="holdings-list">
+                        <div class="holding-item">
+                            <div class="holding-info">
+                                <div class="stock-name">RELIANCE</div>
+                                <div class="stock-qty">5 shares</div>
+                            </div>
+                            <div class="holding-value">
+                                <div class="current-price">₹2,425.50</div>
+                                <div class="pl-value positive">+₹1,245.75 (+5.2%)</div>
+                            </div>
+                        </div>
+                        <div class="holding-item">
+                            <div class="holding-info">
+                                <div class="stock-name">HDFCBANK</div>
+                                <div class="stock-qty">8 shares</div>
+                            </div>
+                            <div class="holding-value">
+                                <div class="current-price">₹1,575.00</div>
+                                <div class="pl-value negative">-₹320.50 (-1.8%)</div>
+                            </div>
+                        </div>
+                        <div class="holding-item">
+                            <div class="holding-info">
+                                <div class="stock-name">INFY</div>
+                                <div class="stock-qty">25 shares</div>
+                            </div>
+                            <div class="holding-value">
+                                <div class="current-price">₹1,410.25</div>
+                                <div class="pl-value positive">+₹2,125.50 (+7.5%)</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="view-all-btn">View All Holdings (17)</button>
+                </div>
+                
+                <div class="sidebar-widget">
+                    <div class="widget-header">
+                        <h3>Funds</h3>
+                    </div>
+                    
+                    <div class="funds-summary">
+                        <div class="fund-item">
+                            <div class="fund-name">Equity</div>
+                            <div class="fund-amount">₹1,00,000.00</div>
+                        </div>
+                        <div class="fund-item">
+                            <div class="fund-name">Commodity</div>
+                            <div class="fund-amount">₹50,000.00</div>
+                        </div>
+                        <div class="fund-item">
+                            <div class="fund-name">Used</div>
+                            <div class="fund-amount negative">₹72,345.67</div>
+                        </div>
+                        <div class="fund-item total">
+                            <div class="fund-name">Available</div>
+                            <div class="fund-amount positive">₹77,654.33</div>
+                        </div>
+                    </div>
+                    
+                    <button class="add-funds-btn"><i class="fas fa-plus"></i> Add Funds</button>
+                </div>
+                
+                <div class="sidebar-widget news-widget">
+                    <div class="widget-header">
+                        <h3>Market News</h3>
+                        <div class="widget-actions">
+                            <button class="widget-action-btn"><i class="fas fa-ellipsis-v"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="news-list">
+                        <div class="news-item">
+                            <div class="news-time">2 min ago</div>
+                            <div class="news-title">RBI keeps repo rate unchanged at 6.5%</div>
+                            <div class="news-source">Economic Times</div>
+                        </div>
+                        <div class="news-item">
+                            <div class="news-time">15 min ago</div>
+                            <div class="news-title">Reliance announces new green energy venture</div>
+                            <div class="news-source">Business Standard</div>
+                        </div>
+                        <div class="news-item">
+                            <div class="news-time">32 min ago</div>
+                            <div class="news-title">IT stocks fall as US recession fears grow</div>
+                            <div class="news-source">Moneycontrol</div>
+                        </div>
+                    </div>
+                    
+                    <button class="view-all-btn">View All News</button>
+                </div>
+            </aside>
+        </div>
+
+        <!-- Bottom Status Bar -->
+        <div class="status-bar">
+            <div class="status-item">
+                <span class="status-label">Last Updated:</span>
+                <span class="status-value">10:57:42 AM</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">Connection:</span>
+                <span class="status-value connected"><i class="fas fa-circle"></i> Stable</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">Latency:</span>
+                <span class="status-value">48 ms</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">Data Source:</span>
+                <span class="status-value">NSE/BSE</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>
